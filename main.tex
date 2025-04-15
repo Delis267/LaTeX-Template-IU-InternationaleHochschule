@@ -15,6 +15,14 @@
 \usepackage[nohyperlinks, printonlyused]{acronym} % Abkürzungen
 \usepackage[utf8]{inputenc} % korrekte Darstellung von Umlauten
 \usepackage[T1]{fontenc} % enable hyphenation for languages with accented characters
+\usepackage{array}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{tabto}
+\usepackage{adjustbox}
+\usepackage{float}
+\usepackage{capt-of}
+
 
 %% Schriftarten und -größen
 \usepackage{fontspec}
@@ -46,12 +54,12 @@
 
 %% Informationen für die PDF-Datei
 \hypersetup{
- pdfauthor={Dennis Lätsch},
- pdftitle={Mein Titel}, %% Titel der PDF-Datei
-  pdfsubject={IU Title},
+ pdfauthor={Vorname Nachname},
+ pdftitle={Titel}, %% Titel der PDF-Datei
+ pdfsubject={IU...},
  pdfkeywords={},
  pdfcreator={lualatex},
- pdfproducer={lualatex - Dennis Laetsch},
+ pdfproducer={lualatex - Vorname Nachname},
 }
 
 %%
@@ -61,23 +69,32 @@
 \usepackage[backend=biber, style=apa, pagetracker, apamaxprtauth=20 ]{biblatex}
 
 %%
+%%  Caption Setup
+%%
+% Abkürzungen für Abbildung und Tabelle verändern laut Zitierleitfaden
+\addto\captionsngerman{
+  \renewcommand{\figurename}{Abb.}
+  \renewcommand{\tablename}{Tab.}
+}
+\captionsetup{
+    justification=raggedright,
+    singlelinecheck=false,
+    labelsep=period,
+    skip=6pt
+}
+
+%%
 %% Source Code Setup im IntelliJ-lightblue-style
 %%
-\usepackage{listings}
-\usepackage{caption}
-\captionsetup[lstlisting]{justification=raggedright, singlelinecheck=false}
 \usepackage{xcolor}
 \usepackage{fontspec}
 \setmonofont{Courier New}
 \definecolor{blue}{HTML}{3777E6}
 \definecolor{grey}{HTML}{8C8C8C}
 \definecolor{light-blue}{HTML}{6A84DB}
-\renewcommand{\lstlistingname}{Abb.}% Listing -> Abb.
+%\renewcommand{\lstlistingname}{Abb.}% Listing -> Abb.
 \lstset{
   frame=trbl,
-  language=Java,
-  aboveskip=1mm,
-  belowskip=1mm,
   showstringspaces=false,
   columns=flexible,
   basicstyle={\linespread{1}\small\ttfamily},
@@ -91,7 +108,85 @@
   breakatwhitespace=false,
   tabsize=2,
   xleftmargin=10pt,
-  belowskip=-1em
+}
+\lstdefinelanguage{json}{
+    morestring=[b]",
+    morecomment=[l]{//},
+    morekeywords={true,false,null},
+    sensitive=false,
+}
+
+\lstdefinelanguage{xml}{
+    morestring=[b]",
+    morecomment=[s]{<!--}{-->},
+    morekeywords={xmlns,version},
+    alsoletter=/<>-,
+    moredelim=[s][\color{red}]{<}{\ },
+    moredelim=[s][\color{red}]{</}{>},
+    moredelim=[s][\color{red}]{<}{>},
+    stringstyle=\color{blue},
+    identifierstyle=\color{black},
+    keywordstyle=\color{purple},
+    commentstyle=\color{gray}
+}
+
+%% 
+%% Eigene Befehle
+%%
+\newcommand{\tabellequelle}{}
+
+% \beginn{apatable}{Titel}{Inhalt der Tabelle}{Spaltenformat}{Quelle}
+% Label= Titel
+% |p{3cm}|p{2.5cm}|p{8cm}| oder {|l|l|l|}
+%%%
+\newenvironment{apatable}[4]{%
+  \renewcommand{\tabellequelle}{#4}
+  \renewcommand{\arraystretch}{1.2} % Mehr Abstand innerhlab der Tabelle
+  \begin{table}[h]
+  \caption{#1}
+  \label{#2}
+  \raggedright % linksbündig statt zentriert
+  \begin{tabular}{#3}
+  \hline
+}{%
+  \end{tabular}
+  \vspace{6pt}
+  \caption*{Quelle: \tabellequelle}
+  \end{table}
+}
+
+%%%
+%%% Eigener Command für Codelistings:
+%%% Codelistings werden ins Abbildungsverzeichnis aufgenommen und auch damit nummeriert.
+% \codelisting
+%  {Titel}
+%  {label}
+%  {filepath oder code}
+%  {Quelle:}
+%%%
+\newcommand{\codelisting}[5]{%
+  \noindent\captionof{figure}{#1} 
+  \label{#2}
+  \lstinputlisting[language=#4]{resources/code/#3}
+  \vspace{-6pt}
+  \noindent{{Quelle: }#5}
+}
+
+% \abbildung
+%  {Titel}
+%  {label}
+%  {filepath oder code}
+%  {Quelle:}
+%%%
+\newcommand{\abbildung}[4]{%
+  \begin{figure}[H]
+    \label{#2}
+    \caption{#1}
+    \adjustbox{max width=\textwidth}{
+        \includegraphics{resources/img/#3}
+    }
+    \caption*{{Quelle: }#4}
+  \end{figure}
 }
 
 % TODO Remove Comma after second to last author and ampersand
@@ -127,15 +222,21 @@
 %\tableofcontents % Inhaltsverzeichnis
 
 %% TODO: Einkommentieren falls Abbildungsverzeichnis benötigt
-%\blankpage
-%\phantomsection
-%\addcontentsline{toc}{section}{Abbildungsverzeichnis}
-%\listoffigures % Abbildungsverzeichnis
+\blankpage
+\phantomsection
+\addcontentsline{toc}{section}{Abbildungsverzeichnis}
+\listoffigures % Abbildungsverzeichnis
 
 %% TODO: Einkommentieren falls Tabellenverzeichnis benötigt
+\blankpage
+\phantomsection
+\listoftables % Tabellenverzeichnis
+\addcontentsline{toc}{section}{Tabellenverzeichnis}
+
 %\blankpage
-%\listoftables % Tabellenverzeichnis
-%\addcontentsline{toc}{section}{Tabellenverzeichnis}
+%\phantomsection
+%\addcontentsline{toc}{section}{Listingverzeichnis}
+%\lstlistoflistings % CodeListingverzeichnis
 
 %% TODO: Einkommentieren falls Abkürzungsverzeichnis benötigt
 \blankpage
@@ -155,8 +256,7 @@
 %% ++++++++++++++++++++++++++++++++++++++++++
 \blankpage
 \pagenumbering{arabic}
-Mein Hauptteil (\cite{greenwade93}).
-%\input{aufgabe1}
+%\input{aufgabe1}# HIER SEITEN EINFÜGEN
 \pagebreak
 %% ++++++++++++++++++++++++++++++++++++++++++
 %% Literatur
