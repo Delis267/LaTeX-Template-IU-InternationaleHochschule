@@ -3,6 +3,14 @@
 Dieses LaTeX-Template ist für wissenschaftliche Arbeiten an der **IU Internationale Hochschule** optimiert und basiert auf LuaLaTeX. Es folgt dem APA-Zitierstil und bietet benutzerdefinierte Umgebungen für Tabellen, Abbildungen und Codelistings sowie viele sinnvolle Voreinstellungen.
 
 ---
+## 📎 Beispielausgabe
+
+Eine Beispielausgabe der kompilierten LaTeX-Datei findest du hier:
+
+👉 [Beispielausgabe als PDF](LaTeX_Template_IU_InternationaleHochschule.pdf)
+
+
+---
 
 ## 🚀 Setup
 
