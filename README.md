@@ -8,7 +8,7 @@ Dieses LaTeX-Template ist für wissenschaftliche Arbeiten an der **IU Internatio
 
 ### Voraussetzungen
 
-- **LuaLaTeX** (empfohlen)
+- Compiler für das PDF muss auf **LuaLaTeX** gestellt werden in Overleaf zb.
 - **Biber** (für Bibliographie mit `biblatex`)
 - Editor mit LaTeX-Support (z. B. VS Code + LaTeX Workshop, Overleaf, TeXstudio)
 
